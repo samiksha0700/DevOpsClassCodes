@@ -1,0 +1,11 @@
+FROM maven:3.6.3-jdk-8 AS Build
+RUN mkdir sample
+WORKDIR sample
+RUN git clone https://github.com/mohitkhokhar172/DevOpsClassCodes.git
+RUN cd DevOpsClassCodes && mvn compile
+RUN cd DevOpsClassCodes && mvn package
+
+FROM tomcat:9
+COPY --from=Build /sample/DevOpsClassCodes/target/addressbook.war /usr/local/tomcat/webapps
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
